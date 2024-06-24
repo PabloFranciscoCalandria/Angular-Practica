@@ -1,1 +1,9 @@
-<h1 [ngStyle]="{'background-color': color}">Aque veras el detalle del producto: {{producto}}</h1>
+<ng-container *ngIf="!loading">
+    <h1>Producto: {{producto?.name}}</h1>
+    <h2 [ngStyle]="{'color': color}">Precio: {{producto?.price | currency}}</h2>
+    <h3 *ngIf="producto?.description">Descripcion: {{producto?.description}}</h3>
+</ng-container>
+
+<ng-container *ngIf="loading">
+    <i style="color: rgb(3, 94, 63);">Cargando informacion...</i>
+</ng-container>
