@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
-export class ContactComponent implements OnInit{
+export class ContactComponent implements OnInit, OnDestroy{
 
     // Formulario de plantilla
 
@@ -32,12 +32,14 @@ export class ContactComponent implements OnInit{
     //   dni: '25984635'
     // }
 
+    mostrarDNI: boolean = false;
+
     constructor( private form: FormBuilder){
       this.formularioContacto = this.form.group({
         nombre: ['', [Validators.required, Validators.minLength(3)]],
         apellido: [''],
         tipoDni: [''],
-        dni: [''],
+        // dni: [''],
         email: ['', [Validators.required, Validators.email]]
       });
     }
@@ -70,10 +72,19 @@ export class ContactComponent implements OnInit{
 
     // ngOnInit con subscripciones
     ngOnInit(): void {
+      console.log("Iniciar el componente");
       // Escucha todo lo que hace el formulario
+      this.formularioContacto.get('nombre')?.setValue('Juan');
+      this.formularioContacto.get('nombre')?.disable();
       this.formularioContacto.get('tipoDni')?.valueChanges.subscribe((valor) => {
+        this.mostrarDNI = valor != ''; // Esto hace que si valor es vacio, mostrar dni sea true
         this.tipoDni = valor;
       });
+    }
+
+    // Esto se ejecuta cuando se cambia de componente, es decir, cambiamos de pantalla por ejemplo
+    ngOnDestroy(){
+      console.log('Se va a cerrar el componente');
     }
 
     hasErrors(controlName: string, errorType: string){
